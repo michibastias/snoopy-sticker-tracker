@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6eee1">
+<title>Mi álbum Snoopy</title>
+<style>
+:root{--cream:#f6eee1;--paper:#fffdf8;--ink:#39372f;--muted:#777367;--green:#dfe9d6;--green-strong:#718864;--pink:#f4dce0;--line:#e6ddce;--gold:#f2e5b9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:ui-rounded,"SF Pro Rounded",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:760px;margin:0 auto;padding:20px 16px 40px}
+.hero{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 5px 18px #66553b0b}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.kicker{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800}
+h1{font-size:clamp(1.8rem,6vw,2.6rem);line-height:1.05;margin:8px 0;color:var(--ink)}
+.subtitle{color:var(--muted);margin:0;font-size:.95rem}
+.paw{font-size:2.6rem;background:var(--gold);border-radius:20px;width:66px;height:66px;display:grid;place-items:center;flex-shrink:0}
+.progress-row{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:22px 0 8px}
+.big-number{font-size:1.7rem;font-weight:850}
+.progress-track{height:10px;background:#ece5d9;border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:var(--green-strong);border-radius:99px;transition:width .2s}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.stat{background:#f8f4ec;border-radius:15px;padding:12px;text-align:center}
+.stat strong{display:block;font-size:1.35rem}
+.stat span{font-size:.76rem;color:var(--muted)}
+.controls{margin:18px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:.8rem;color:var(--muted);font-weight:750}
+input,select{width:100%;min-width:0;border:1px solid var(--line);background:var(--paper);border-radius:13px;padding:12px;color:var(--ink);outline-color:var(--green-strong)}
+.search-wrap{grid-column:1/-1}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;margin-bottom:4px}
+.filter{border:1px solid var(--line);background:var(--paper);color:var(--muted);padding:9px 13px;border-radius:99px;white-space:nowrap;font-size:.88rem;font-weight:700}
+.filter.active{background:var(--ink);border-color:var(--ink);color:white}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.sticker{position:relative;min-height:76px;border:1px solid var(--line);border-radius:15px;background:var(--paper);color:var(--ink);padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;transition:transform .1s,background .1s}
+.sticker:active{transform:scale(.97)}
+.sticker .num{font-size:1.05rem;font-weight:850}
+.sticker .state{font-size:.67rem;line-height:1.1;text-align:center;color:var(--muted)}
+.sticker.owned{background:var(--green);border-color:#c5d4ba}
+.sticker.owned .state{color:#526b48}
+.sticker.repeat{background:var(--pink);border-color:#e6c4cb}
+.sticker.repeat .state{color:#89535e}
+.sticker .dot{position:absolute;right:7px;top:6px;font-size:.7rem}
+.empty{background:var(--paper);border:1px dashed var(--line);border-radius:16px;padding:24px;text-align:center;color:var(--muted);grid-column:1/-1}
+.bottom-note{font-size:.8rem;color:var(--muted);line-height:1.5;margin:16px 2px}
+.tools{margin-top:20px;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:16px}
+.tools h2{font-size:1rem;margin:0 0 5px}
+.tools p{font-size:.83rem;color:var(--muted);line-height:1.45;margin:0 0 12px}
+.tool-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.action{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#f8f4ec;color:var(--ink);font-weight:750;font-size:.85rem}
+.action.primary{background:var(--green);border-color:#c5d4ba}
+.action.danger{background:#fff3f3}
+.settings{display:flex;gap:10px;align-items:end;margin-top:14px}
+.settings .field{flex:1}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:white;padding:11px 16px;border-radius:99px;font-size:.88rem;box-shadow:0 5px 20px #0002;display:none;z-index:5;max-width:90vw;text-align:center}
+footer{text-align:center;font-size:.75rem;color:var(--muted);padding:18px 0 0}
+@media(min-width:540px){.grid{grid-template-columns:repeat(8,minmax(0,1fr))}.sticker{min-height:82px}.controls{grid-template-columns:2fr 1fr 1fr}.search-wrap{grid-column:auto}}
+</style>
+</head>
+<body>
+<main class="app">
+  <section class="hero">
+    <div class="topline">
+      <div>
+        <div class="kicker">Mi colección personal</div>
+        <h1>Mi álbum Snoopy</h1>
+        <p class="subtitle">Un espacio para cada lámina 🐾</p>
+      </div>
+      <div class="paw" aria-hidden="true">🐶</div>
+    </div>
+    <div class="progress-row">
+      <div><div class="kicker">Mi progreso</div><div class="big-number"><span id="ownedCount">0</span> <span style="font-size:1rem;font-weight:600;color:var(--muted)">de <span id="totalLabel">286</span></span></div></div>
+      <strong id="percent">0%</strong>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="stats">
+      <div class="stat"><strong id="missingCount">286</strong><span>Me faltan</span></div>
+      <div class="stat"><strong id="repeatCount">0</strong><span>Repetidas</span></div>
+      <div class="stat"><strong id="doneCount">0</strong><span>Completadas</span></div>
+    </div>
+  </section>
+
+  <section class="controls" aria-label="Buscar y filtrar láminas">
+    <div class="field search-wrap"><label for="search">Buscar número</label><input id="search" type="search" placeholder="Ej. 24" inputmode="numeric" autocomplete="off"></div>
+    <div class="field"><label for="filterSelect">Mostrar</label><select id="filterSelect"><option value="all">Todas</option><option value="missing">Me faltan</option><option value="owned">Las tengo</option><option value="repeat">Repetidas</option></select></div>
+    <div class="field"><label for="sortSelect">Orden</label><select id="sortSelect"><option value="asc">Menor a mayor</option><option value="desc">Mayor a menor</option></select></div>
+  </section>
+
+  <div class="filters" aria-label="Filtros rápidos">
+    <button class="filter active" data-filter="all">Todas</button>
+    <button class="filter" data-filter="missing">Me faltan</button>
+    <button class="filter" data-filter="owned">Las tengo</button>
+    <button class="filter" data-filter="repeat">Repetidas</button>
+  </div>
+  <section id="stickerGrid" class="grid" aria-label="Lista de láminas"></section>
+  <p class="bottom-note">Toca una lámina para cambiar su estado: <strong>Me falta → La tengo → Repetida → Me falta</strong>. Tus cambios se guardan en este navegador.</p>
+
+  <section class="tools">
+    <h2>Tu colección, bajo control</h2>
+    <p>Haz una copia de seguridad antes de borrar los datos del navegador o cambiar de dispositivo.</p>
+    <div class="tool-buttons">
+      <button class="action primary" id="exportBtn">Exportar copia</button>
+      <button class="action" id="importBtn">Importar copia</button>
+      <input id="importFile" type="file" accept="application/json,.json" hidden>
+    </div>
+    <div class="settings">
+      <div class="field"><label for="totalInput">Total de láminas</label><input id="totalInput" type="number" min="1" max="5000" value="286" inputmode="numeric"></div>
+      <button class="action" id="setTotalBtn">Actualizar total</button>
+    </div>
+    <p style="margin-top:10px">El total inicial de 286 es provisional. Verifica que corresponda a tu edición antes de completar la colección.</p>
+    <div class="tool-buttons"><button class="action danger" id="resetBtn">Reiniciar estados</button></div>
+  </section>
+  <footer>Hecho con cariño para tu colección · Los datos se guardan en este navegador.</footer>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(() => {
+  const KEY = "mi-album-snoopy-v1";
+  const DEFAULT_TOTAL = 286;
+  let data = { total: DEFAULT_TOTAL, states: {} };
+  let currentFilter = "all";
+  let toastTimer;
+
+  const $ = (id) => document.getElementById(id);
+  const validState = (s) => ["missing", "owned", "repeat"].includes(s);
+
+  function load() {
+    try {
+      const saved = localStorage.getItem(KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && Number.isInteger(parsed.total) && parsed.total > 0 && parsed.states && typeof parsed.states === "object") {
+          data.total = Math.min(parsed.total, 5000);
+          data.states = parsed.states;
+          for (const [n, s] of Object.entries(data.states)) {
+            if (!/^\d+$/.test(n) || Number(n) < 1 || Number(n) > data.total || !validState(s)) delete data.states[n];
+          }
+        }
+      }
+    } catch (_) { showToast("No pude leer los datos guardados."); }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(data)); }
+    catch (_) { showToast("No se pudo guardar. Exporta una copia de seguridad."); }
+  }
+  function stateOf(n) { return data.states[n] || "missing"; }
+  function labelOf(s) { return s === "owned" ? "✓ La tengo" : s === "repeat" ? "↻ Repetida" : "+ Me falta"; }
+  function cycle(n) {
+    const next = { missing: "owned", owned: "repeat", repeat: "missing" }[stateOf(n)];
+    if (next === "missing") delete data.states[n]; else data.states[n] = next;
+    save(); render();
+  }
+  function showToast(message) {
+    const t = $("toast"); t.textContent = message; t.style.display = "block";
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.style.display = "none", 2400);
+  }
+  function counts() {
+    let owned = 0, repeat = 0;
+    for (let n = 1; n <= data.total; n++) {
+      const s = stateOf(n);
+      if (s === "owned") owned++;
+      if (s === "repeat") repeat++;
+    }
+    return { owned, repeat, missing: data.total - owned - repeat, done: owned + repeat };
+  }
+  function render() {
+    const c = counts();
+    $("ownedCount").textContent = c.owned;
+    $("totalLabel").textContent = data.total;
+    $("missingCount").textContent = c.missing;
+    $("repeatCount").textContent = c.repeat;
+    $("doneCount").textContent = c.done;
+    const pct = data.total ? Math.round(c.done / data.total * 100) : 0;
+    $("percent").textContent = pct + "%";
+    $("progressFill").style.width = pct + "%";
+    $("totalInput").value = data.total;
+    const q = $("search").value.trim();
+    const filter = currentFilter;
+    const nums = Array.from({length:data.total}, (_, i) => i + 1);
+    if ($("sortSelect").value === "desc") nums.reverse();
+    const filtered = nums.filter(n => {
+      const s = stateOf(n);
+      const matchesSearch = !q || String(n).includes(q);
+      const matchesFilter = filter === "all" || (filter === "missing" && s === "missing") || (filter === "owned" && s === "owned") || (filter === "repeat" && s === "repeat");
+      return matchesSearch && matchesFilter;
+    });
+    const grid = $("stickerGrid");
+    grid.replaceChildren();
+    if (!filtered.length) {
+      const empty = document.createElement("div"); empty.className = "empty"; empty.textContent = "No hay láminas que coincidan con tu búsqueda."; grid.appendChild(empty); return;
+    }
+    const frag = document.createDocumentFragment();
+    filtered.forEach(n => {
+      const s = stateOf(n);
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "sticker" + (s === "owned" ? " owned" : s === "repeat" ? " repeat" : "");
+      b.setAttribute("aria-label", "Lámina " + n + ": " + labelOf(s) + ". Toca para cambiar estado.");
+      const num = document.createElement("span"); num.className = "num"; num.textContent = String(n);
+      const state = document.createElement("span"); state.className = "state"; state.textContent = labelOf(s);
+      b.append(num, state); b.addEventListener("click", () => cycle(n)); frag.appendChild(b);
+    });
+    grid.appendChild(frag);
+  }
+  function setFilter(f) {
+    currentFilter = f;
+    $("filterSelect").value = f;
+    document.querySelectorAll("[data-filter]").forEach(b => b.classList.toggle("active", b.dataset.filter === f));
+    render();
+  }
+
+  $("search").addEventListener("input", render);
+  $("filterSelect").addEventListener("change", e => setFilter(e.target.value));
+  $("sortSelect").addEventListener("change", render);
+  document.querySelectorAll("[data-filter]").forEach(b => b.addEventListener("click", () => setFilter(b.dataset.filter)));
+  $("setTotalBtn").addEventListener("click", () => {
+    const n = Number($("totalInput").value);
+    if (!Number.isInteger(n) || n < 1 || n > 5000) { showToast("El total debe estar entre 1 y 5000."); return; }
+    if (n < data.total && !confirm("Al reducir el total, se eliminarán los estados de las láminas por encima de " + n + ". ¿Continuar?")) { $("totalInput").value = data.total; return; }
+    data.total = n;
+    Object.keys(data.states).forEach(k => { if (Number(k) > n) delete data.states[k]; });
+    save(); render(); showToast("Total actualizado.");
+  });
+  $("exportBtn").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify({app:"Mi álbum Snoopy",version:1,total:data.total,states:data.states,exportedAt:new Date().toISOString()}, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob); const a = document.createElement("a");
+    a.href = url; a.download = "mi-album-snoopy-copia.json"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    showToast("Copia de seguridad descargada.");
+  });
+  $("importBtn").addEventListener("click", () => $("importFile").click());
+  $("importFile").addEventListener("change", async e => {
+    const file = e.target.files && e.target.files[0]; if (!file) return;
+    try {
+      const parsed = JSON.parse(await file.text());
+      if (!Number.isInteger(parsed.total) || parsed.total < 1 || parsed.total > 5000 || !parsed.states || typeof parsed.states !== "object") throw new Error("Formato");
+      const states = {};
+      for (const [n,s] of Object.entries(parsed.states)) if (/^\d+$/.test(n) && Number(n) >= 1 && Number(n) <= parsed.total && validState(s)) states[n] = s;
+      data = {total:parsed.total,states}; save(); render(); showToast("Copia importada correctamente.");
+    } catch (_) { showToast("Ese archivo no parece una copia válida."); }
+    e.target.value = "";
+  });
+  $("resetBtn").addEventListener("click", () => {
+    if (!confirm("¿Seguro que quieres reiniciar todos los estados? Esta acción no se puede deshacer, salvo que tengas una copia.")) return;
+    data.states = {}; save(); render(); showToast("Estados reiniciados.");
+  });
+  load(); render();
+})();
+</script>
+</body>
+</html>
