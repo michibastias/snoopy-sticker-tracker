@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#e6e9ff">
 <title>Snoopy: Un año para recordar</title>
+<meta name="description" content="Tracker personal de láminas Snoopy: marca las que tienes, las que te faltan y las que tienes repetidas.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Snoopy">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <style>
 :root{--cream:#e6e9ff;--paper:#fdfdff;--ink:#303454;--muted:#72779a;--green:#d9e2ff;--green-strong:#7d86d9;--pink:#f0dfff;--line:#cfd4f3;--gold:#cbd5ff}
 *{box-sizing:border-box}
@@ -58,6 +67,30 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);background:var(
 #toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:white;padding:11px 16px;border-radius:99px;font-size:.88rem;box-shadow:0 5px 20px #0002;display:none;z-index:5;max-width:90vw;text-align:center}
 footer{text-align:center;font-size:.75rem;color:var(--muted);padding:18px 0 0}
 @media(min-width:540px){.grid{grid-template-columns:repeat(8,minmax(0,1fr))}.sticker{min-height:82px}.controls{grid-template-columns:2fr 1fr 1fr}.search-wrap{grid-column:auto}}
+
+/* ---- iOS / standalone ---- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  min-height:100vh;min-height:100dvh;
+  padding-top:max(20px,env(safe-area-inset-top));
+  padding-bottom:max(40px,env(safe-area-inset-bottom));
+  padding-left:max(16px,env(safe-area-inset-left));
+  padding-right:max(16px,env(safe-area-inset-right));
+  -webkit-tap-highlight-color:transparent;
+  overscroll-behavior-y:contain;
+}
+.app{padding-bottom:max(40px,env(safe-area-inset-bottom))}
+input,select,button{font-size:16px}
+input,select{touch-action:manipulation}
+.sticker{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+.sticker:active{transform:scale(.94)}
+.filter{-webkit-user-select:none;user-select:none;touch-action:manipulation}
+.action,.filter,.sticker{touch-action:manipulation}
+.filters{-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+#toast{bottom:calc(22px + env(safe-area-inset-bottom));max-width:calc(100vw - 32px)}
+@media(hover:none){.sticker:hover{transform:none}}
+@supports(-webkit-touch-callout:none){.sticker{transition:transform .08s}}
 </style>
 </head>
 <body>
